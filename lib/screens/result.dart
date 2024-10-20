@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class MyResult extends StatelessWidget {
   final File image;
   final String result;
-  final dynamic probability;
+  final String objectType;
 
   const MyResult({
     super.key,
     required this.image,
     required this.result,
-    required this.probability,
+    required this.objectType,
   });
 
   @override
@@ -19,6 +19,7 @@ class MyResult extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.indigo,
         title: const Text(
           'Classification Result',
           style: TextStyle(
@@ -61,14 +62,14 @@ class MyResult extends StatelessWidget {
               height: 30,
             ),
             Text(
-              'Result: $result',
+              'Object Type: $result',
               style: const TextStyle(
                   fontSize: 28,
                   fontFamily: 'SofiaSans',
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              'Probability: ${(probability * 100).toStringAsFixed(2)}%',
+              'Result: $objectType',
               style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(
@@ -88,7 +89,7 @@ class MyResult extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text(
-                  'Back to Home',
+                  'Back to Scan',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,

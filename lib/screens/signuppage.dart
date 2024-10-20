@@ -1,9 +1,9 @@
-import 'package:evocapp/components/signupbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:evocapp/components/signupbutton.dart';
 import 'package:evocapp/components/squaretile.dart';
 import 'package:evocapp/components/textfield.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:evocapp/screens/loginpage.dart';
+import 'package:evocapp/database/db_helper.dart';
 
 class MySignUpPage extends StatefulWidget {
   final String email;
@@ -16,44 +16,67 @@ class MySignUpPage extends StatefulWidget {
 class _MySignUpPageState extends State<MySignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  late Box _box;
+  final DbHelper _dbHelper = DbHelper();
 
   @override
   void initState() {
     super.initState();
-    _initializeHive();
   }
 
-  Future<void> _initializeHive() async {
-    _box = await Hive.openBox('UsersBox');
-  }
+  Future<void> _register() async {
+    final email = emailController.text;
+    final password = passwordController.text;
 
-  void _signUp() {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
-    final existingPassword = _box.get(email);
-
-    if (existingPassword != null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('User already exists'),
-      ));
-    } else if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Please enter both email and password'),
-      ));
-    } else {
-      _box.put(email, password);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Sign Up Successful!'),
-      ));
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => MyLoginPage(
-            email: widget.email,
-          ),
+    if (email.isEmpty || password.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Email and Password are required to fill up'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
         ),
       );
+    } else {
+      try {
+        await _dbHelper.insertUser(email, password);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User registered successfully')),
+        );
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('User registration successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => MyLoginPage(
+                        email: email, // Pass the email to MyLoginPage
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error registering user: $e')),
+        );
+      }
     }
   }
 
@@ -61,7 +84,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -94,7 +117,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
               ),
               const SizedBox(height: 15),
               const SizedBox(height: 20),
-              MySignup(onPressed: _signUp),
+              MySignup(onPressed: _register),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,5 @@
+import 'package:evocapp/database/db_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class MyNotification extends StatefulWidget {
   const MyNotification({Key? key}) : super(key: key);
@@ -10,28 +10,43 @@ class MyNotification extends StatefulWidget {
 
 class _MyNotificationState extends State<MyNotification> {
   final TextEditingController _textEditingController = TextEditingController();
-  late Box<String> _notesBox;
+  final DbHelper _dbHelper = DbHelper();
+  List<Map<String, dynamic>> _reports = [];
 
   @override
   void initState() {
     super.initState();
-    _notesBox = Hive.box<String>('notesBox');
+    _loadReports();
   }
 
-  void _addNote() {
+  Future<void> _loadReports() async {
+    final reports = await _dbHelper.getReports();
+    setState(() {
+      _reports = reports;
+    });
+  }
+
+  void _addNote() async {
     String note = _textEditingController.text;
     if (note.isNotEmpty) {
-      _notesBox.add(note);
+      DateTime eventDate = DateTime.now();
+      await _dbHelper.insertReport(note, eventDate);
       _textEditingController.clear();
+      _loadReports();
     }
+  }
+
+  void _deletReport(int id) async {
+    await _dbHelper.deleteReports(id);
+    _loadReports();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white12,
         title: const Text('Reports'),
       ),
       body: Padding(
@@ -52,34 +67,22 @@ class _MyNotificationState extends State<MyNotification> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: _notesBox.listenable(),
-                builder: (context, Box<String> box, _) {
-                  if (box.values.isEmpty) {
-                    return const Center(
-                      child: Text('No notes yet'),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: box.length,
-                    itemBuilder: (context, index) {
-                      final note = box.getAt(index);
-                      return Card(
-                        child: ListTile(
-                          title: Text(note!),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              box.deleteAt(index);
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+                child: _reports.isEmpty
+                    ? const Center(child: Text('No report yet'))
+                    : ListView.builder(
+                        itemCount: _reports.length,
+                        itemBuilder: (context, index) {
+                          final report = _reports[index];
+                          return Card(
+                            child: ListTile(
+                              title: Text(report['note']),
+                              trailing: IconButton(
+                                  onPressed: () => _deletReport(report['id']),
+                                  icon: const Icon(Icons.delete)),
+                            ),
+                          );
+                        },
+                      )),
           ],
         ),
       ),

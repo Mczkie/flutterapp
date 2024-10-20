@@ -1,64 +1,53 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'dart:async'; // Import for Timer
+import 'package:evocapp/database/db_helper.dart';
+import 'package:evocapp/screens/loginpage.dart';
 
-class MyMenu extends StatefulWidget {
-  const MyMenu({super.key});
+class MyMenu extends StatelessWidget {
+  const MyMenu({super.key, required this.email});
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _MyMenuState createState() => _MyMenuState();
-}
-
-class _MyMenuState extends State<MyMenu> {
-  final List<String> _messages = [
-    'Hello World!',
-    'Welcome to Flutter!',
-    'Enjoy your day!',
-    'Keep coding!',
-    'Stay positive!',
-    'tanga!',
-  ];
-
-  String _currentMessage = '';
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentMessage = _getRandomMessage();
-    _startMessageTimer();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel(); // Cancel the timer when the widget is disposed
-    super.dispose();
-  }
-
-  String _getRandomMessage() {
-    final randomIndex = (DateTime.now().millisecondsSinceEpoch / 2000).floor() %
-        _messages.length;
-    return _messages[randomIndex];
-  }
-
-  void _startMessageTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      setState(() {
-        _currentMessage = _getRandomMessage();
-      });
-    });
-  }
+  final String email;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300,
-      height: 130,
-      decoration: const BoxDecoration(
-        color: Colors.deepOrange,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Menu'),
+        backgroundColor: Colors.green,
       ),
-      child: Center(
-          child: Text(_currentMessage, style: const TextStyle(fontSize: 20))),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // Add your menu items here
+            const Text('Welcome to the Menu Page'),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _logout(context);
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final DbHelper dbHelper = DbHelper();
+
+    // Update login status to 0 (logged out)
+    await dbHelper.updatedLoginStatus(email, 0);
+
+    // Navigate to the login page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MyLoginPage(
+                email: email,
+              )),
     );
   }
 }

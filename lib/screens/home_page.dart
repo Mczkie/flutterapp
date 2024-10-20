@@ -32,14 +32,16 @@ class _MyHomePageState extends State<MyHomePage> {
       MyHome(email: widget.email),
       const MyRecycling(),
       const MyNotification(),
-      const MyMenu(),
+      MyMenu(
+        email: widget.email,
+      ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white38,
       body: FutureBuilder<List<Widget>>(
         future: _bodyFuture,
         builder: (context, snapshot) {

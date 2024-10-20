@@ -6,7 +6,7 @@ class MyRecycling extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -16,7 +16,7 @@ class MyRecycling extends StatelessWidget {
                 children: [
                   Text(
                     'Recycle and Articles',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                   ),
                 ],
               ),
@@ -25,7 +25,11 @@ class MyRecycling extends StatelessWidget {
                 children: [
                   Text(
                     'Type of Waste',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      decoration: TextDecoration.underline,
+                      letterSpacing: -1,
+                    ),
                   )
                 ],
               ),
@@ -38,11 +42,16 @@ class MyRecycling extends StatelessWidget {
                   Column(
                     children: [
                       Container(
-                        decoration: const BoxDecoration(color: Colors.white),
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20)),
                         width: 100,
                         height: 100,
                         child: const Center(
-                          child: Text('BIO'),
+                          child: Text(
+                            'BIO',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
                       ),
                     ],
@@ -66,7 +75,11 @@ class MyRecycling extends StatelessWidget {
                 children: [
                   Text(
                     'ARTICLES',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        letterSpacing: -1),
                   ),
                 ],
               ),
@@ -75,7 +88,7 @@ class MyRecycling extends StatelessWidget {
                 children: [
                   Container(
                     decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.blueAccent,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     height: 100,
                     width: 1000,
@@ -97,7 +110,7 @@ class MyRecycling extends StatelessWidget {
                 children: [
                   Container(
                     decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.blueAccent,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     height: 100,
                     width: 1000,

@@ -4,7 +4,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
-        android:label="evocapp"
+        android:label="EVOC"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         

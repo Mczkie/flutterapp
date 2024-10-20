@@ -11,14 +11,14 @@ class MyLogText extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.blueAccent,
         ),
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.symmetric(horizontal: 25),
         child: const Center(
           child: Text(
-            'Login',
+            'LOGIN',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),

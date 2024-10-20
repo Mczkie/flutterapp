@@ -1,9 +1,7 @@
-import 'package:evocapp/screens/home.dart';
 import 'package:evocapp/screens/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:hive/hive.dart';
 
 class MyStartup extends StatefulWidget {
   final String email;
@@ -17,29 +15,12 @@ class _MyStartupState extends State<MyStartup> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
-  }
-
-  void _checkLoginStatus() async {
-    var box = Hive.box('usersBox');
-    bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
-    String email = box.get('loggedInUser', defaultValue: '');
-
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => MyHome(email: email),
-        ),
-      );
-    } else {
-      setState(() {});
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
-      globalBackgroundColor: Colors.green,
+      globalBackgroundColor: Colors.white10,
       pages: [
         PageViewModel(
           image: Center(
@@ -51,7 +32,7 @@ class _MyStartupState extends State<MyStartup> {
           decoration: const PageDecoration(
             titleTextStyle:
                 TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            pageColor: Colors.green,
+            pageColor: Colors.white,
           ),
         ),
         PageViewModel(
@@ -67,7 +48,7 @@ class _MyStartupState extends State<MyStartup> {
           decoration: const PageDecoration(
             titleTextStyle:
                 TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            pageColor: Colors.green,
+            pageColor: Colors.white,
             bodyTextStyle: TextStyle(fontSize: 19),
           ),
         ),

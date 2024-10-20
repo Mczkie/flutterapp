@@ -1,14 +1,9 @@
-// import 'package:evocapp/screens/home_page.dart';
 import 'package:evocapp/screens/startup.dart';
-// import 'package:evocapp/screens/startup.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'screens/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  await Hive.openBox<String>('notesBox');
-  await Hive.openBox('UsersBox');
 
   const String email = '';
   runApp(const MyApp(
@@ -25,6 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyStartup(email: email),
+      routes: {
+        '/homepage': (context) => MyHomePage(email: email),
+      },
     );
   }
 }
